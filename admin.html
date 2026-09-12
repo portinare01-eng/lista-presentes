@@ -17,104 +17,274 @@
             font-family: Arial, sans-serif;
             background: #f7f4f0;
             color: #333;
+        }
 
-            min-height: 100vh;
+        header {
+            background: white;
+            padding: 25px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+        }
+
+        .header-interno {
+            max-width: 1100px;
+            margin: auto;
 
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
 
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .sair {
+            width: auto;
+            background: #eee;
+            color: #333;
+            padding: 10px 18px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 25px 15px 50px;
+        }
+
+        .topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .topo h2 {
+            margin: 0;
+        }
+
+        .novo {
+            width: auto;
+            padding: 12px 18px;
+        }
+
+        .lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .presente {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, .08);
+        }
+
+        .presente-conteudo {
             padding: 20px;
         }
 
-        .login {
+        .presente h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+        }
+
+        .descricao {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .quantidade {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        button {
             width: 100%;
-            max-width: 400px;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            background: #333;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
 
+        button:hover {
+            opacity: .85;
+        }
+
+        .botoes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .editar {
+            background: #555;
+        }
+
+        .excluir {
+            background: #b71c1c;
+        }
+
+        .reservas {
+            background: #eee;
+            color: #333;
+            margin-top: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .55);
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-conteudo {
             background: white;
-
-            padding: 30px;
+            width: 100%;
+            max-width: 450px;
 
             border-radius: 16px;
+            padding: 25px;
 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        h1 {
+        .modal-conteudo h2 {
             margin-top: 0;
-            text-align: center;
-        }
-
-        p {
-            text-align: center;
-            color: #777;
-            margin-bottom: 25px;
         }
 
         label {
             display: block;
             font-weight: bold;
-            margin-bottom: 7px;
+            margin: 15px 0 7px;
         }
 
-        input {
+        input,
+        textarea {
             width: 100%;
-
-            padding: 14px;
+            padding: 13px;
 
             border: 1px solid #ccc;
             border-radius: 8px;
 
+            font-family: Arial, sans-serif;
             font-size: 16px;
-
-            margin-bottom: 18px;
         }
 
-        input:focus {
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
             outline: none;
             border-color: #333;
         }
 
-        button {
-            width: 100%;
-
-            border: none;
-            border-radius: 8px;
-
-            padding: 14px;
-
-            background: #333;
-            color: white;
-
-            font-size: 16px;
-
-            cursor: pointer;
+        .salvar {
+            margin-top: 20px;
         }
 
-        button:hover {
-            opacity: 0.85;
+        .cancelar {
+            background: #ddd;
+            color: #333;
+            margin-top: 8px;
+        }
+
+        .mensagem {
+            display: none;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .sucesso {
+            background: #e8f5e9;
+            color: #256029;
         }
 
         .erro {
-            display: none;
-
             background: #ffebee;
             color: #b71c1c;
-
-            padding: 12px;
-
-            border-radius: 8px;
-
-            margin-bottom: 18px;
-
-            text-align: center;
         }
 
-        .carregando {
+        .sem-presentes {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
             text-align: center;
-            margin-top: 15px;
             color: #777;
-            display: none;
+        }
+
+        .lista-reservas {
+            margin-top: 15px;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+
+        .reserva {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .reserva:last-child {
+            border-bottom: none;
+        }
+
+        .reserva strong {
+            display: block;
+        }
+
+        .nenhuma-reserva {
+            color: #777;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+
+            .header-interno {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .header-interno h1 {
+                text-align: center;
+            }
+
+            .topo {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .topo h2 {
+                text-align: center;
+            }
+
+            .novo {
+                width: 100%;
+            }
+
+            .lista {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 
@@ -122,55 +292,132 @@
 
 <body>
 
-    <div class="login">
+    <header>
 
-        <h1>🔐 Administração</h1>
+        <div class="header-interno">
 
-        <p>
-            Entre para gerenciar sua lista de presentes.
-        </p>
+            <h1>🎁 Administração</h1>
 
+            <button
+                class="sair"
+                onclick="sair()"
+            >
+                Sair
+            </button>
 
-        <div id="erro" class="erro"></div>
+        </div>
 
-
-        <label for="email">
-            E-mail
-        </label>
-
-        <input
-            type="email"
-            id="email"
-            placeholder="Seu e-mail"
-            autocomplete="email"
-        >
+    </header>
 
 
-        <label for="senha">
-            Senha
-        </label>
+    <main class="container">
 
-        <input
-            type="password"
-            id="senha"
-            placeholder="Sua senha"
-            autocomplete="current-password"
-        >
+        <div
+            id="mensagem"
+            class="mensagem"
+        ></div>
 
 
-        <button
-            id="botaoEntrar"
-            onclick="entrar()"
-        >
-            Entrar
-        </button>
+        <div class="topo">
+
+            <h2>
+                Meus presentes
+            </h2>
+
+            <button
+                class="novo"
+                onclick="abrirNovo()"
+            >
+                ➕ Novo presente
+            </button>
+
+        </div>
 
 
         <div
-            id="carregando"
-            class="carregando"
+            id="lista"
+            class="lista"
         >
-            Entrando...
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         MODAL PRESENTE
+         ===================================================== -->
+
+    <div
+        id="modalPresente"
+        class="modal"
+    >
+
+        <div class="modal-conteudo">
+
+            <h2 id="tituloModal">
+                Novo presente
+            </h2>
+
+
+            <label for="nomePresente">
+                Nome do presente
+            </label>
+
+            <input
+                id="nomePresente"
+                type="text"
+                placeholder="Ex.: Jogo de panelas"
+            >
+
+
+            <label for="descricaoPresente">
+                Descrição
+            </label>
+
+            <textarea
+                id="descricaoPresente"
+                placeholder="Descrição do presente..."
+            ></textarea>
+
+
+            <label for="quantidadePresente">
+                Quantidade
+            </label>
+
+            <input
+                id="quantidadePresente"
+                type="number"
+                min="0"
+                value="1"
+            >
+
+
+            <label for="imagemPresente">
+                URL da imagem
+            </label>
+
+            <input
+                id="imagemPresente"
+                type="url"
+                placeholder="https://..."
+            >
+
+
+            <button
+                class="salvar"
+                onclick="salvarPresente()"
+            >
+                Salvar presente
+            </button>
+
+
+            <button
+                class="cancelar"
+                onclick="fecharModal()"
+            >
+                Cancelar
+            </button>
+
         </div>
 
     </div>
@@ -187,103 +434,634 @@
         // CONFIGURAÇÃO
         // =====================================================
 
-        const SUPABASE_URL = "https://hoeefymvmncbgzrxdcwj.supabase.co";
+        const SUPABASE_URL =
+            "https://hoeefymvmncbgzrxdcwj.supabase.co";
 
         const SUPABASE_PUBLISHABLE_KEY =
             "sb_publishable_Fdv87uRPzxCOBmv-MFHt0w_dBdgMMrq";
 
 
-        const supabaseClient = supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+        const supabaseClient =
+            supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
 
 
         // =====================================================
-        // LOGIN
+        // VARIÁVEIS
         // =====================================================
 
-        async function entrar() {
-
-            const email =
-                document.getElementById("email")
-                .value
-                .trim();
-
-            const senha =
-                document.getElementById("senha")
-                .value;
+        let presenteEditando = null;
 
 
-            const erro =
-                document.getElementById("erro");
+        // =====================================================
+        // VERIFICAR LOGIN
+        // =====================================================
 
-            const botao =
-                document.getElementById("botaoEntrar");
+        async function verificarLogin() {
 
-            const carregando =
-                document.getElementById("carregando");
-
-
-            erro.style.display = "none";
+            const {
+                data,
+                error
+            } = await supabaseClient.auth.getUser();
 
 
-            if (email === "" || senha === "") {
+            if (error || !data.user) {
 
-                erro.innerText =
-                    "Preencha o e-mail e a senha.";
+                window.location.href =
+                    "admin.html";
 
-                erro.style.display = "block";
+                return false;
+            }
 
+
+            return true;
+        }
+
+
+        // =====================================================
+        // CARREGAR PRESENTES
+        // =====================================================
+
+        async function carregarPresentes() {
+
+            const lista =
+                document.getElementById("lista");
+
+
+            const logado =
+                await verificarLogin();
+
+
+            if (!logado) {
                 return;
             }
 
 
-            botao.disabled = true;
-
-            carregando.style.display = "block";
-
-
-            const { data, error } =
-                await supabaseClient.auth
-                    .signInWithPassword({
-                        email: email,
-                        password: senha
-                    });
-
-
-            botao.disabled = false;
-
-            carregando.style.display = "none";
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from("presentes")
+                .select("*")
+                .order("id", {
+                    ascending: true
+                });
 
 
             if (error) {
 
                 console.error(error);
 
-                erro.innerText =
-                    "E-mail ou senha incorretos.";
-
-                erro.style.display = "block";
+                lista.innerHTML = `
+                    <div class="erro" style="display:block;">
+                        Não foi possível carregar os presentes.
+                    </div>
+                `;
 
                 return;
             }
 
 
-            console.log(
-                "Login realizado:",
-                data.user
-            );
+            if (!data || data.length === 0) {
+
+                lista.innerHTML = `
+                    <div class="sem-presentes">
+                        Nenhum presente cadastrado.
+                    </div>
+                `;
+
+                return;
+            }
 
 
-            // Por enquanto apenas confirma
-            // que o login funcionou.
+            lista.innerHTML = "";
 
-            alert(
-                "Login realizado com sucesso!"
-            );
+
+            data.forEach(presente => {
+
+                const card =
+                    document.createElement("div");
+
+
+                card.className =
+                    "presente";
+
+
+                card.innerHTML = `
+
+                    <div class="presente-conteudo">
+
+                        <h3>
+                            ${escaparHTML(presente.nome)}
+                        </h3>
+
+                        <div class="descricao">
+                            ${escaparHTML(
+                                presente.descricao || ""
+                            )}
+                        </div>
+
+                        <div class="quantidade">
+                            Disponíveis:
+                            ${presente.quantidade}
+                        </div>
+
+                        <div class="botoes">
+
+                            <button
+                                class="editar"
+                                onclick="abrirEditar(${presente.id})"
+                            >
+                                ✏️ Editar
+                            </button>
+
+                            <button
+                                class="excluir"
+                                onclick="excluirPresente(${presente.id})"
+                            >
+                                🗑️ Excluir
+                            </button>
+
+                        </div>
+
+                        <button
+                            class="reservas"
+                            onclick="verReservas(${presente.id})"
+                        >
+                            👥 Ver reservas
+                        </button>
+
+                        <div
+                            id="reservas-${presente.id}"
+                            class="lista-reservas"
+                        ></div>
+
+                    </div>
+                `;
+
+
+                lista.appendChild(card);
+
+            });
 
         }
+
+
+        // =====================================================
+        // NOVO PRESENTE
+        // =====================================================
+
+        function abrirNovo() {
+
+            presenteEditando = null;
+
+
+            document.getElementById(
+                "tituloModal"
+            ).innerText =
+                "Novo presente";
+
+
+            document.getElementById(
+                "nomePresente"
+            ).value = "";
+
+
+            document.getElementById(
+                "descricaoPresente"
+            ).value = "";
+
+
+            document.getElementById(
+                "quantidadePresente"
+            ).value = 1;
+
+
+            document.getElementById(
+                "imagemPresente"
+            ).value = "";
+
+
+            document.getElementById(
+                "modalPresente"
+            ).style.display = "flex";
+
+        }
+
+
+        // =====================================================
+        // EDITAR
+        // =====================================================
+
+        async function abrirEditar(id) {
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from("presentes")
+                .select("*")
+                .eq("id", id)
+                .single();
+
+
+            if (error) {
+
+                alert(
+                    "Não foi possível carregar o presente."
+                );
+
+                return;
+            }
+
+
+            presenteEditando = id;
+
+
+            document.getElementById(
+                "tituloModal"
+            ).innerText =
+                "Editar presente";
+
+
+            document.getElementById(
+                "nomePresente"
+            ).value =
+                data.nome;
+
+
+            document.getElementById(
+                "descricaoPresente"
+            ).value =
+                data.descricao || "";
+
+
+            document.getElementById(
+                "quantidadePresente"
+            ).value =
+                data.quantidade;
+
+
+            document.getElementById(
+                "imagemPresente"
+            ).value =
+                data.imagem_url || "";
+
+
+            document.getElementById(
+                "modalPresente"
+            ).style.display =
+                "flex";
+
+        }
+
+
+        // =====================================================
+        // SALVAR
+        // =====================================================
+
+        async function salvarPresente() {
+
+            const nome =
+                document.getElementById(
+                    "nomePresente"
+                ).value.trim();
+
+
+            const descricao =
+                document.getElementById(
+                    "descricaoPresente"
+                ).value.trim();
+
+
+            const quantidade =
+                parseInt(
+                    document.getElementById(
+                        "quantidadePresente"
+                    ).value
+                );
+
+
+            const imagem =
+                document.getElementById(
+                    "imagemPresente"
+                ).value.trim();
+
+
+            if (!nome) {
+
+                alert(
+                    "Digite o nome do presente."
+                );
+
+                return;
+            }
+
+
+            if (
+                isNaN(quantidade) ||
+                quantidade < 0
+            ) {
+
+                alert(
+                    "Digite uma quantidade válida."
+                );
+
+                return;
+            }
+
+
+            let resultado;
+
+
+            if (presenteEditando === null) {
+
+                resultado =
+                    await supabaseClient
+                        .from("presentes")
+                        .insert({
+                            nome: nome,
+                            descricao: descricao,
+                            quantidade: quantidade,
+                            imagem_url:
+                                imagem || null
+                        });
+
+            } else {
+
+                resultado =
+                    await supabaseClient
+                        .from("presentes")
+                        .update({
+                            nome: nome,
+                            descricao: descricao,
+                            quantidade: quantidade,
+                            imagem_url:
+                                imagem || null
+                        })
+                        .eq(
+                            "id",
+                            presenteEditando
+                        );
+
+            }
+
+
+            if (resultado.error) {
+
+                console.error(
+                    resultado.error
+                );
+
+                alert(
+                    "Não foi possível salvar o presente."
+                );
+
+                return;
+            }
+
+
+            fecharModal();
+
+            mostrarMensagem(
+                "Presente salvo com sucesso!"
+            );
+
+
+            carregarPresentes();
+
+        }
+
+
+        // =====================================================
+        // EXCLUIR
+        // =====================================================
+
+        async function excluirPresente(id) {
+
+            const confirmar =
+                confirm(
+                    "Tem certeza que deseja excluir este presente?"
+                );
+
+
+            if (!confirmar) {
+                return;
+            }
+
+
+            const {
+                error
+            } = await supabaseClient
+                .from("presentes")
+                .delete()
+                .eq("id", id);
+
+
+            if (error) {
+
+                console.error(error);
+
+                alert(
+                    "Não foi possível excluir o presente."
+                );
+
+                return;
+            }
+
+
+            mostrarMensagem(
+                "Presente excluído."
+            );
+
+
+            carregarPresentes();
+
+        }
+
+
+        // =====================================================
+        // VER RESERVAS
+        // =====================================================
+
+        async function verReservas(id) {
+
+            const area =
+                document.getElementById(
+                    "reservas-" + id
+                );
+
+
+            area.innerHTML =
+                "Carregando reservas...";
+
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from("reservas")
+                .select("*")
+                .eq("presente_id", id)
+                .order("criado_em", {
+                    ascending: false
+                });
+
+
+            if (error) {
+
+                console.error(error);
+
+                area.innerHTML =
+                    "Não foi possível carregar as reservas.";
+
+                return;
+            }
+
+
+            if (!data || data.length === 0) {
+
+                area.innerHTML = `
+                    <div class="nenhuma-reserva">
+                        Nenhuma reserva ainda.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            area.innerHTML = "";
+
+
+            data.forEach(reserva => {
+
+                const div =
+                    document.createElement("div");
+
+
+                div.className =
+                    "reserva";
+
+
+                const dataReserva =
+                    new Date(
+                        reserva.criado_em
+                    ).toLocaleString(
+                        "pt-BR"
+                    );
+
+
+                div.innerHTML = `
+
+                    <strong>
+                        ${escaparHTML(reserva.nome)}
+                    </strong>
+
+                    Quantidade:
+                    ${reserva.quantidade}
+
+                    <br>
+
+                    <small>
+                        ${dataReserva}
+                    </small>
+
+                `;
+
+
+                area.appendChild(div);
+
+            });
+
+        }
+
+
+        // =====================================================
+        // FECHAR MODAL
+        // =====================================================
+
+        function fecharModal() {
+
+            document.getElementById(
+                "modalPresente"
+            ).style.display =
+                "none";
+
+        }
+
+
+        // =====================================================
+        // MENSAGEM
+        // =====================================================
+
+        function mostrarMensagem(texto) {
+
+            const mensagem =
+                document.getElementById(
+                    "mensagem"
+                );
+
+
+            mensagem.innerText =
+                texto;
+
+
+            mensagem.className =
+                "mensagem sucesso";
+
+
+            mensagem.style.display =
+                "block";
+
+
+            setTimeout(() => {
+
+                mensagem.style.display =
+                    "none";
+
+            }, 4000);
+
+        }
+
+
+        // =====================================================
+        // SAIR
+        // =====================================================
+
+        async function sair() {
+
+            await supabaseClient.auth.signOut();
+
+            window.location.href =
+                "admin.html";
+
+        }
+
+
+        // =====================================================
+        // SEGURANÇA HTML
+        // =====================================================
+
+        function escaparHTML(texto) {
+
+            return String(texto)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        // =====================================================
+        // INICIAR
+        // =====================================================
+
+        carregarPresentes();
 
     </script>
 
