@@ -561,60 +561,353 @@ const supabase = window.supabase.createClient(
         if (quantidadeEscolhida > presente.quantidade) {
 
             alert("Quantidade indisponível.");
+```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-            return;
+<script>
+
+const SUPABASE_URL = "COLE_AQUI_A_PROJECT_URL";
+const SUPABASE_ANON_KEY = "COLE_AQUI_A_ANON_KEY";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+
+// Guarda os presentes carregados do banco
+let presentes = [];
+
+let presenteSelecionado = null;
+
+let quantidadeEscolhida = 1;
+
+
+// ========================================
+// CARREGAR PRESENTES DO SUPABASE
+// ========================================
+
+async function carregarPresentes() {
+
+    const { data, error } = await supabase
+        .from("presentes")
+        .select("*")
+        .eq("ativo", true)
+        .order("id");
+
+    if (error) {
+
+        console.error("Erro ao carregar presentes:", error);
+
+        alert("Não foi possível carregar a lista de presentes.");
+
+        return;
+    }
+
+    presentes = data;
+
+    mostrarPresentes();
+
+}
+
+
+// ========================================
+// MOSTRAR PRESENTES NA TELA
+// ========================================
+
+function mostrarPresentes() {
+
+    const lista = document.querySelector(".lista");
+
+    lista.innerHTML = "";
+
+
+    presentes.forEach((presente, indice) => {
+
+        const card = document.createElement("div");
+
+        card.className = "presente";
+
+
+        const imagem = presente.foto_url
+            ? presente.foto_url
+            : "https://via.placeholder.com/800x500?text=Presente";
+
+
+        let botao;
+
+
+        if (presente.quantidade <= 0) {
+
+            botao = `
+                <button class="esgotado" disabled>
+                    Esgotado
+                </button>
+            `;
+
+        } else {
+
+            botao = `
+                <button onclick="abrirModal(${indice})">
+                    Escolher presente
+                </button>
+            `;
 
         }
 
 
-        presente.quantidade -= quantidadeEscolhida;
+        card.innerHTML = `
+
+            <img
+                src="${imagem}"
+                alt="${presente.nome}"
+            >
+
+            <div class="conteudo">
+
+                <h2>${presente.nome}</h2>
+
+                <div class="descricao">
+                    ${presente.descricao || ""}
+                </div>
+
+                <div class="quantidade">
+                    Disponível:
+                    <span id="qtd-${indice}">
+                        ${presente.quantidade}
+                    </span>
+                </div>
+
+                ${botao}
+
+            </div>
+        `;
+
+
+        lista.appendChild(card);
+
+    });
+
+}
+
+
+// ========================================
+// ABRIR MODAL
+// ========================================
+
+function abrirModal(indice) {
+
+    if (presentes[indice].quantidade <= 0) {
+        return;
+    }
+
+
+    presenteSelecionado = indice;
+
+    quantidadeEscolhida = 1;
+
+
+    document.getElementById("nomePresente").innerText =
+        presentes[indice].nome;
+
+
+    document.getElementById("quantidadeEscolhida").innerText =
+        quantidadeEscolhida;
+
+
+    document.getElementById("nome").value = "";
+
+
+    document.getElementById("modal").style.display = "flex";
+
+}
+
+
+// ========================================
+// FECHAR MODAL
+// ========================================
+
+function fecharModal() {
+
+    document.getElementById("modal").style.display = "none";
+
+}
+
+
+// ========================================
+// AUMENTAR QUANTIDADE
+// ========================================
+
+function aumentar() {
+
+    if (presenteSelecionado === null) {
+        return;
+    }
+
+
+    const disponivel =
+        presentes[presenteSelecionado].quantidade;
+
+
+    if (quantidadeEscolhida < disponivel) {
+
+        quantidadeEscolhida++;
 
 
         document.getElementById(
-            "qtd-" + presenteSelecionado
-        ).innerText = presente.quantidade;
-
-
-        if (presente.quantidade === 0) {
-
-            const botoes =
-                document.querySelectorAll(".presente button");
-
-            botoes[presenteSelecionado].innerText =
-                "Esgotado";
-
-            botoes[presenteSelecionado].classList.add("esgotado");
-
-            botoes[presenteSelecionado].disabled = true;
-
-        }
-
-
-        const mensagem =
-            document.getElementById("mensagem");
-
-        mensagem.innerText =
-            "Obrigado, " + nome +
-            "! Você escolheu " +
-            quantidadeEscolhida +
-            " unidade(s) de " +
-            presente.nome +
-            ".";
-
-        mensagem.style.display = "block";
-
-
-        fecharModal();
-
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+            "quantidadeEscolhida"
+        ).innerText = quantidadeEscolhida;
 
     }
 
+}
+
+
+// ========================================
+// DIMINUIR QUANTIDADE
+// ========================================
+
+function diminuir() {
+
+    if (quantidadeEscolhida > 1) {
+
+        quantidadeEscolhida--;
+
+
+        document.getElementById(
+            "quantidadeEscolhida"
+        ).innerText = quantidadeEscolhida;
+
+    }
+
+}
+
+
+// ========================================
+// CONFIRMAR PRESENTE
+// ========================================
+
+async function confirmarPresente() {
+
+    const nome =
+        document.getElementById("nome").value.trim();
+
+
+    if (nome === "") {
+
+        alert("Digite seu nome.");
+
+        return;
+
+    }
+
+
+    if (presenteSelecionado === null) {
+        return;
+    }
+
+
+    const presente =
+        presentes[presenteSelecionado];
+
+
+    // Desabilita o botão enquanto salva
+    const botoes =
+        document.querySelectorAll(".confirmar");
+
+    botoes.forEach(botao => {
+        botao.disabled = true;
+        botao.innerText = "Salvando...";
+    });
+
+
+    // Chama a função segura do Supabase
+    const { data, error } = await supabase.rpc(
+        "escolher_presente",
+        {
+            p_presente_id: presente.id,
+            p_nome: nome,
+            p_quantidade: quantidadeEscolhida
+        }
+    );
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Não foi possível registrar a escolha. Tente novamente."
+        );
+
+        botoes.forEach(botao => {
+            botao.disabled = false;
+            botao.innerText = "Confirmar presente";
+        });
+
+        return;
+    }
+
+
+    // Verifica resposta do banco
+    if (!data.sucesso) {
+
+        alert(data.mensagem);
+
+        botoes.forEach(botao => {
+            botao.disabled = false;
+            botao.innerText = "Confirmar presente";
+        });
+
+        // Atualiza a lista caso a quantidade tenha mudado
+        await carregarPresentes();
+
+        fecharModal();
+
+        return;
+    }
+
+
+    // Mostra mensagem de sucesso
+    const mensagem =
+        document.getElementById("mensagem");
+
+
+    mensagem.innerText =
+        "Obrigado, " + nome +
+        "! Você escolheu " +
+        quantidadeEscolhida +
+        " unidade(s) de " +
+        presente.nome +
+        ".";
+
+
+    mensagem.style.display = "block";
+
+
+    fecharModal();
+
+
+    // Recarrega a lista diretamente do banco
+    await carregarPresentes();
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+// ========================================
+// INICIAR SITE
+// ========================================
+
+carregarPresentes();
+
 </script>
+```
 
 </body>
 
