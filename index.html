@@ -99,18 +99,112 @@
             opacity: 0.85;
         }
 
-        .carregando {
+        .esgotado {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-conteudo {
+            background: white;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .modal-conteudo h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #333;
+        }
+
+        .controle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 15px 0 20px;
+        }
+
+        .controle button {
+            width: 50px;
+            height: 45px;
+            padding: 0;
+            font-size: 24px;
+        }
+
+        #quantidadeEscolhida {
+            min-width: 30px;
             text-align: center;
-            color: #777;
-            padding: 30px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .confirmar {
+            background: #333;
+            margin-top: 10px;
+        }
+
+        .cancelar {
+            background: #ddd;
+            color: #333;
+            margin-top: 8px;
+        }
+
+        .mensagem {
+            display: none;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .sucesso {
+            background: #e8f5e9;
+            color: #256029;
         }
 
         .erro {
             background: #ffebee;
             color: #b71c1c;
-            padding: 15px;
-            border-radius: 10px;
+        }
+
+        .carregando {
             text-align: center;
+            color: #777;
+            padding: 30px;
         }
 
         @media (max-width: 600px) {
@@ -142,36 +236,122 @@
 <body>
 
     <header>
+
         <h1>🎁 Lista de Presentes</h1>
 
         <p>
             Escolha um presente e deixe seu nome
             para sabermos quem nos presenteou.
         </p>
+
     </header>
+
 
     <main class="container">
 
+        <div id="mensagem" class="mensagem"></div>
+
         <div id="lista" class="lista">
+
             <div class="carregando">
                 Carregando presentes...
             </div>
+
         </div>
 
     </main>
 
+
+    <!-- MODAL -->
+
+    <div id="modal" class="modal">
+
+        <div class="modal-conteudo">
+
+            <h2 id="nomePresente">
+                Presente
+            </h2>
+
+
+            <label for="nome">
+                Seu nome
+            </label>
+
+            <input
+                id="nome"
+                type="text"
+                placeholder="Digite seu nome"
+                autocomplete="name"
+            >
+
+
+            <label style="margin-top:18px;">
+                Quantidade
+            </label>
+
+
+            <div class="controle">
+
+                <button
+                    type="button"
+                    onclick="diminuirQuantidade()"
+                >
+                    −
+                </button>
+
+
+                <span id="quantidadeEscolhida">
+                    1
+                </span>
+
+
+                <button
+                    type="button"
+                    onclick="aumentarQuantidade()"
+                >
+                    +
+                </button>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="confirmar"
+                onclick="confirmarPresente()"
+            >
+                Confirmar presente
+            </button>
+
+
+            <button
+                type="button"
+                class="cancelar"
+                onclick="fecharModal()"
+            >
+                Cancelar
+            </button>
+
+        </div>
+
+    </div>
+
+
     <!-- SUPABASE -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
     <script>
 
-        // ==========================================
-        // CONFIGURAÇÃO DO SUPABASE
-        // ==========================================
+        // =====================================================
+        // CONFIGURAÇÃO
+        // =====================================================
 
         const SUPABASE_URL = "https://hoeefymvmncbgzrxdcwj.supabase.co";
 
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Fdv87uRPzxCOBmv-MFHt0w_dBdgMMrq";
+
 
         const supabaseClient = supabase.createClient(
             SUPABASE_URL,
@@ -179,9 +359,18 @@
         );
 
 
-        // ==========================================
-        // BUSCAR PRESENTES
-        // ==========================================
+        // =====================================================
+        // VARIÁVEIS
+        // =====================================================
+
+        let presenteSelecionado = null;
+
+        let quantidadeEscolhida = 1;
+
+
+        // =====================================================
+        // CARREGAR PRESENTES
+        // =====================================================
 
         async function carregarPresentes() {
 
@@ -190,16 +379,17 @@
             const { data, error } = await supabaseClient
                 .from("presentes")
                 .select("*")
-                .order("id", { ascending: true });
+                .order("id", {
+                    ascending: true
+                });
 
 
-            // Se aconteceu algum erro
             if (error) {
 
-                console.error("Erro ao buscar presentes:", error);
+                console.error(error);
 
                 lista.innerHTML = `
-                    <div class="erro">
+                    <div class="erro" style="display:block;">
                         Não foi possível carregar os presentes.
                     </div>
                 `;
@@ -208,7 +398,6 @@
             }
 
 
-            // Se não existe nenhum presente
             if (!data || data.length === 0) {
 
                 lista.innerHTML = `
@@ -221,11 +410,9 @@
             }
 
 
-            // Limpa a mensagem "Carregando..."
             lista.innerHTML = "";
 
 
-            // Cria os cards
             data.forEach(presente => {
 
                 const card = document.createElement("div");
@@ -233,40 +420,76 @@
                 card.className = "presente";
 
 
-                // Imagem provisória caso ainda não exista foto
                 const imagem = presente.imagem_url
                     ? presente.imagem_url
                     : "https://via.placeholder.com/600x400?text=Presente";
 
 
-                card.innerHTML = `
+                if (presente.quantidade <= 0) {
 
-                    <img
-                        src="${imagem}"
-                        alt="${presente.nome}"
-                    >
+                    card.innerHTML = `
 
-                    <div class="conteudo">
+                        <img
+                            src="${imagem}"
+                            alt="${presente.nome}"
+                        >
 
-                        <h2>
-                            ${presente.nome}
-                        </h2>
+                        <div class="conteudo">
 
-                        <div class="descricao">
-                            ${presente.descricao || ""}
+                            <h2>
+                                ${presente.nome}
+                            </h2>
+
+                            <div class="descricao">
+                                ${presente.descricao || ""}
+                            </div>
+
+                            <div class="quantidade">
+                                Esgotado
+                            </div>
+
+                            <button
+                                class="esgotado"
+                                disabled
+                            >
+                                Esgotado
+                            </button>
+
                         </div>
+                    `;
 
-                        <div class="quantidade">
-                            Disponíveis: ${presente.quantidade}
+                } else {
+
+                    card.innerHTML = `
+
+                        <img
+                            src="${imagem}"
+                            alt="${presente.nome}"
+                        >
+
+                        <div class="conteudo">
+
+                            <h2>
+                                ${presente.nome}
+                            </h2>
+
+                            <div class="descricao">
+                                ${presente.descricao || ""}
+                            </div>
+
+                            <div class="quantidade">
+                                Disponíveis: ${presente.quantidade}
+                            </div>
+
+                            <button
+                                onclick='abrirModal(${JSON.stringify(presente)})'
+                            >
+                                Escolher este presente
+                            </button>
+
                         </div>
-
-                        <button onclick="selecionarPresente(${presente.id})">
-                            Escolher este presente
-                        </button>
-
-                    </div>
-
-                `;
+                    `;
+                }
 
 
                 lista.appendChild(card);
@@ -276,23 +499,248 @@
         }
 
 
-        // ==========================================
-        // BOTÃO
-        // ==========================================
+        // =====================================================
+        // ABRIR MODAL
+        // =====================================================
 
-        function selecionarPresente(id) {
+        function abrirModal(presente) {
 
-            alert(
-                "Presente selecionado: " + id +
-                "\n\nA reserva será feita na próxima etapa."
-            );
+            presenteSelecionado = presente;
+
+            quantidadeEscolhida = 1;
+
+
+            document.getElementById("nomePresente").innerText =
+                presente.nome;
+
+
+            document.getElementById("quantidadeEscolhida").innerText =
+                quantidadeEscolhida;
+
+
+            document.getElementById("nome").value = "";
+
+
+            document.getElementById("modal").style.display =
+                "flex";
+
+
+            document.getElementById("nome").focus();
 
         }
 
 
-        // ==========================================
+        // =====================================================
+        // FECHAR MODAL
+        // =====================================================
+
+        function fecharModal() {
+
+            document.getElementById("modal").style.display =
+                "none";
+
+        }
+
+
+        // =====================================================
+        // AUMENTAR QUANTIDADE
+        // =====================================================
+
+        function aumentarQuantidade() {
+
+            if (!presenteSelecionado) {
+                return;
+            }
+
+
+            if (
+                quantidadeEscolhida <
+                presenteSelecionado.quantidade
+            ) {
+
+                quantidadeEscolhida++;
+
+
+                document.getElementById(
+                    "quantidadeEscolhida"
+                ).innerText = quantidadeEscolhida;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // DIMINUIR QUANTIDADE
+        // =====================================================
+
+        function diminuirQuantidade() {
+
+            if (quantidadeEscolhida > 1) {
+
+                quantidadeEscolhida--;
+
+
+                document.getElementById(
+                    "quantidadeEscolhida"
+                ).innerText = quantidadeEscolhida;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // CONFIRMAR PRESENTE
+        // =====================================================
+
+        async function confirmarPresente() {
+
+            const nome =
+                document.getElementById("nome")
+                .value
+                .trim();
+
+
+            if (nome === "") {
+
+                alert("Digite seu nome.");
+
+                return;
+
+            }
+
+
+            if (!presenteSelecionado) {
+
+                return;
+
+            }
+
+
+            const botao =
+                document.querySelector(".confirmar");
+
+
+            botao.disabled = true;
+
+            botao.innerText = "Reservando...";
+
+
+            // Chama a função criada no Supabase
+
+            const { data, error } =
+                await supabaseClient.rpc(
+                    "reservar_presente",
+                    {
+                        p_presente_id:
+                            presenteSelecionado.id,
+
+                        p_nome:
+                            nome,
+
+                        p_quantidade:
+                            quantidadeEscolhida
+                    }
+                );
+
+
+            botao.disabled = false;
+
+            botao.innerText =
+                "Confirmar presente";
+
+
+            // Erro de comunicação
+
+            if (error) {
+
+                console.error(
+                    "Erro ao reservar:",
+                    error
+                );
+
+                alert(
+                    "Ocorreu um erro ao reservar o presente."
+                );
+
+                return;
+
+            }
+
+
+            // Resposta da função
+
+            if (!data.sucesso) {
+
+                alert(data.mensagem);
+
+                fecharModal();
+
+                carregarPresentes();
+
+                return;
+
+            }
+
+
+            // Sucesso
+
+            fecharModal();
+
+
+            mostrarMensagem(
+                "🎉 Presente reservado com sucesso! Obrigado, " +
+                nome +
+                "!"
+            );
+
+
+            // Atualiza a lista
+
+            carregarPresentes();
+
+        }
+
+
+        // =====================================================
+        // MENSAGEM
+        // =====================================================
+
+        function mostrarMensagem(texto) {
+
+            const mensagem =
+                document.getElementById("mensagem");
+
+
+            mensagem.innerText = texto;
+
+            mensagem.className =
+                "mensagem sucesso";
+
+            mensagem.style.display =
+                "block";
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+
+            setTimeout(() => {
+
+                mensagem.style.display =
+                    "none";
+
+            }, 5000);
+
+        }
+
+
+        // =====================================================
         // INICIAR
-        // ==========================================
+        // =====================================================
 
         carregarPresentes();
 
