@@ -283,7 +283,7 @@ let quantidadeEscolhida = 1;
 // ========================================
 // CARREGAR PRESENTES DO SUPABASE
 // ========================================
-
+    
 async function carregarPresentes() {
 
     const lista = document.querySelector(".lista");
@@ -292,7 +292,9 @@ async function carregarPresentes() {
 
     const { data, error } = await supabase
         .from("presentes")
-        .select("*");
+        .select("*")
+        .order("id", { ascending: true });
+
 
     if (error) {
 
@@ -301,18 +303,23 @@ async function carregarPresentes() {
             error.message +
             "</p>";
 
-        console.error(error);
+        console.error("ERRO SUPABASE:", error);
 
         return;
     }
 
-    lista.innerHTML =
-        "<p style='color:green; font-size:20px;'>" +
-        "Supabase encontrou " +
-        data.length +
-        " presente(s).</p>";
 
     console.log("DADOS RECEBIDOS:", data);
+
+
+    // IMPORTANTE:
+    // Guarda os presentes recebidos do Supabase
+    presentes = data || [];
+
+
+    // Mostra os presentes na tela
+    mostrarPresentes();
+
 }
 
 
