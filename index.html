@@ -260,6 +260,25 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+<script>
+
+alert("PASSOU DA BIBLIOTECA SUPABASE");
+
+const SUPABASE_URL = "https://hoeefymvmncbgzrxdcwj.supabase.co";
+
+const SUPABASE_ANON_KEY = "sb_publishable_Fdv87uRPzxCOBmv-MFHt0w_dBdgMMrq";
+
+alert("URL E KEY DEFINIDAS");
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+alert("SUPABASE CRIADO!");
+
+</script>
 
 <script>
 
