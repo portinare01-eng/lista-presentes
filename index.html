@@ -293,9 +293,9 @@ async function carregarPresentes() {
 
 if (error) {
 
-    alert("ERRO SUPABASE: " + error.message);
-
     console.error("Erro ao carregar presentes:", error);
+
+    alert("Não foi possível carregar a lista de presentes.");
 
     return;
 }
