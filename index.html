@@ -424,9 +424,18 @@
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 
-    const presentes = [
+const SUPABASE_URL = "COLE_AQUI_SUA_PROJECT_URL";
+const SUPABASE_ANON_KEY = "COLE_AQUI_SUA_ANON_KEY";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
 
         {
             nome: "Jogo de Panelas",
