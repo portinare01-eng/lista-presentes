@@ -1,5 +1,7 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,25 +21,26 @@
         }
 
         header {
-            text-align: center;
-            padding: 40px 20px;
             background: white;
+            text-align: center;
+            padding: 40px 20px 30px;
         }
 
         header h1 {
-            margin: 0 0 10px;
+            margin: 0 0 12px;
             font-size: 32px;
         }
 
         header p {
             margin: 0;
             color: #777;
+            line-height: 1.5;
         }
 
         .container {
             max-width: 1000px;
             margin: auto;
-            padding: 25px 15px;
+            padding: 25px 15px 50px;
         }
 
         .lista {
@@ -50,7 +53,7 @@
             background: white;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
         }
 
         .presente img {
@@ -64,18 +67,25 @@
         }
 
         .conteudo h2 {
-            margin-top: 0;
+            margin: 0 0 10px;
             font-size: 20px;
         }
 
-        .quantidade {
+        .descricao {
             color: #777;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .quantidade {
+            font-weight: bold;
             margin-bottom: 15px;
         }
 
         button {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             border: none;
             border-radius: 8px;
             background: #333;
@@ -87,19 +97,115 @@
         button:hover {
             opacity: 0.85;
         }
+
+        .esgotado {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        /* Janela de escolha */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-conteudo {
+            background: white;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .modal-conteudo h2 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .controle {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 10px 0 20px;
+        }
+
+        .controle button {
+            width: 45px;
+            padding: 10px;
+            font-size: 20px;
+        }
+
+        #quantidadeEscolhida {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .confirmar {
+            background: #333;
+            margin-top: 10px;
+        }
+
+        .cancelar {
+            background: #ddd;
+            color: #333;
+            margin-top: 8px;
+        }
+
+        .mensagem {
+            display: none;
+            background: #e8f5e9;
+            color: #256029;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
 
 <header>
+
     <h1>🎁 Lista de Presentes</h1>
-    <p>Escolha um presente para nos ajudar a realizar esse momento especial.</p>
+
+    <p>
+        Escolha um presente e deixe seu nome para sabermos quem nos presenteou.
+    </p>
+
 </header>
+
 
 <div class="container">
 
+    <div id="mensagem" class="mensagem"></div>
+
     <div class="lista">
+
+
+        <!-- PRESENTE 1 -->
 
         <div class="presente">
 
@@ -109,11 +215,150 @@
 
                 <h2>Jogo de Panelas</h2>
 
-                <div class="quantidade">
-                    Disponível: 1
+                <div class="descricao">
+                    Jogo de panelas para nossa cozinha.
                 </div>
 
-                <button>
+                <div class="quantidade">
+                    Disponível: <span id="qtd-0">1</span>
+                </div>
+
+                <button onclick="abrirModal(0)">
+                    Escolher presente
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRESENTE 2 -->
+
+        <div class="presente">
+
+            <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80">
+
+            <div class="conteudo">
+
+                <h2>Jogo de Cama</h2>
+
+                <div class="descricao">
+                    Jogo de cama para nossa nova casa.
+                </div>
+
+                <div class="quantidade">
+                    Disponível: <span id="qtd-1">3</span>
+                </div>
+
+                <button onclick="abrirModal(1)">
+                    Escolher presente
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRESENTE 3 -->
+
+        <div class="presente">
+
+            <img src="https://images.unsplash.com/photo-1572119865084-43c285814d63?auto=format&fit=crop&w=800&q=80">
+
+            <div class="conteudo">
+
+                <h2>Jogo de Taças</h2>
+
+                <div class="descricao">
+                    Taças para receber nossos amigos e familiares.
+                </div>
+
+                <div class="quantidade">
+                    Disponível: <span id="qtd-2">6</span>
+                </div>
+
+                <button onclick="abrirModal(2)">
+                    Escolher presente
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRESENTE 4 -->
+
+        <div class="presente">
+
+            <img src="https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=800&q=80">
+
+            <div class="conteudo">
+
+                <h2>Cafeteira</h2>
+
+                <div class="descricao">
+                    Uma cafeteira para começar bem as manhãs.
+                </div>
+
+                <div class="quantidade">
+                    Disponível: <span id="qtd-3">1</span>
+                </div>
+
+                <button onclick="abrirModal(3)">
+                    Escolher presente
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRESENTE 5 -->
+
+        <div class="presente">
+
+            <img src="https://images.unsplash.com/photo-1594736797933-d0f06ba40fce?auto=format&fit=crop&w=800&q=80">
+
+            <div class="conteudo">
+
+                <h2>Kit de Toalhas</h2>
+
+                <div class="descricao">
+                    Kit de toalhas para nossa casa.
+                </div>
+
+                <div class="quantidade">
+                    Disponível: <span id="qtd-4">4</span>
+                </div>
+
+                <button onclick="abrirModal(4)">
+                    Escolher presente
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRESENTE 6 -->
+
+        <div class="presente">
+
+            <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=800&q=80">
+
+            <div class="conteudo">
+
+                <h2>Utensílios de Cozinha</h2>
+
+                <div class="descricao">
+                    Kit de utensílios para nossa cozinha.
+                </div>
+
+                <div class="quantidade">
+                    Disponível: <span id="qtd-5">2</span>
+                </div>
+
+                <button onclick="abrirModal(5)">
                     Escolher presente
                 </button>
 
@@ -125,5 +370,244 @@
 
 </div>
 
+
+<!-- MODAL -->
+
+<div id="modal" class="modal">
+
+    <div class="modal-conteudo">
+
+        <h2 id="nomePresente"></h2>
+
+        <label for="nome">
+            Seu nome
+        </label>
+
+        <input
+            id="nome"
+            type="text"
+            placeholder="Digite seu nome"
+        >
+
+
+        <label>
+            Quantidade
+        </label>
+
+        <div class="controle">
+
+            <button onclick="diminuir()">
+                −
+            </button>
+
+            <span id="quantidadeEscolhida">
+                1
+            </span>
+
+            <button onclick="aumentar()">
+                +
+            </button>
+
+        </div>
+
+
+        <button class="confirmar" onclick="confirmarPresente()">
+            Confirmar presente
+        </button>
+
+        <button class="cancelar" onclick="fecharModal()">
+            Cancelar
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const presentes = [
+
+        {
+            nome: "Jogo de Panelas",
+            quantidade: 1
+        },
+
+        {
+            nome: "Jogo de Cama",
+            quantidade: 3
+        },
+
+        {
+            nome: "Jogo de Taças",
+            quantidade: 6
+        },
+
+        {
+            nome: "Cafeteira",
+            quantidade: 1
+        },
+
+        {
+            nome: "Kit de Toalhas",
+            quantidade: 4
+        },
+
+        {
+            nome: "Utensílios de Cozinha",
+            quantidade: 2
+        }
+
+    ];
+
+
+    let presenteSelecionado = null;
+
+    let quantidadeEscolhida = 1;
+
+
+    function abrirModal(indice) {
+
+        if (presentes[indice].quantidade <= 0) {
+            return;
+        }
+
+        presenteSelecionado = indice;
+
+        quantidadeEscolhida = 1;
+
+        document.getElementById("nomePresente").innerText =
+            presentes[indice].nome;
+
+        document.getElementById("quantidadeEscolhida").innerText =
+            quantidadeEscolhida;
+
+        document.getElementById("nome").value = "";
+
+        document.getElementById("modal").style.display = "flex";
+
+    }
+
+
+    function fecharModal() {
+
+        document.getElementById("modal").style.display = "none";
+
+    }
+
+
+    function aumentar() {
+
+        if (presenteSelecionado === null) {
+            return;
+        }
+
+        const disponivel =
+            presentes[presenteSelecionado].quantidade;
+
+        if (quantidadeEscolhida < disponivel) {
+
+            quantidadeEscolhida++;
+
+            document.getElementById("quantidadeEscolhida").innerText =
+                quantidadeEscolhida;
+
+        }
+
+    }
+
+
+    function diminuir() {
+
+        if (quantidadeEscolhida > 1) {
+
+            quantidadeEscolhida--;
+
+            document.getElementById("quantidadeEscolhida").innerText =
+                quantidadeEscolhida;
+
+        }
+
+    }
+
+
+    function confirmarPresente() {
+
+        const nome =
+            document.getElementById("nome").value.trim();
+
+        if (nome === "") {
+
+            alert("Digite seu nome.");
+
+            return;
+
+        }
+
+
+        const presente =
+            presentes[presenteSelecionado];
+
+
+        if (quantidadeEscolhida > presente.quantidade) {
+
+            alert("Quantidade indisponível.");
+
+            return;
+
+        }
+
+
+        presente.quantidade -= quantidadeEscolhida;
+
+
+        document.getElementById(
+            "qtd-" + presenteSelecionado
+        ).innerText = presente.quantidade;
+
+
+        if (presente.quantidade === 0) {
+
+            const botoes =
+                document.querySelectorAll(".presente button");
+
+            botoes[presenteSelecionado].innerText =
+                "Esgotado";
+
+            botoes[presenteSelecionado].classList.add("esgotado");
+
+            botoes[presenteSelecionado].disabled = true;
+
+        }
+
+
+        const mensagem =
+            document.getElementById("mensagem");
+
+        mensagem.innerText =
+            "Obrigado, " + nome +
+            "! Você escolheu " +
+            quantidadeEscolhida +
+            " unidade(s) de " +
+            presente.nome +
+            ".";
+
+        mensagem.style.display = "block";
+
+
+        fecharModal();
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+</script>
+
 </body>
+
 </html>
+```
