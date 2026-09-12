@@ -1,1 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin - Lista de Presentes</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f4f0;
+            color: #333;
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .login {
+            width: 100%;
+            max-width: 400px;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 16px;
+
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 14px;
+
+            border: 1px solid #ccc;
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            margin-bottom: 18px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        button {
+            width: 100%;
+
+            border: none;
+            border-radius: 8px;
+
+            padding: 14px;
+
+            background: #333;
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .erro {
+            display: none;
+
+            background: #ffebee;
+            color: #b71c1c;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-bottom: 18px;
+
+            text-align: center;
+        }
+
+        .carregando {
+            text-align: center;
+            margin-top: 15px;
+            color: #777;
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="login">
+
+        <h1>🔐 Administração</h1>
+
+        <p>
+            Entre para gerenciar sua lista de presentes.
+        </p>
+
+
+        <div id="erro" class="erro"></div>
+
+
+        <label for="email">
+            E-mail
+        </label>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Seu e-mail"
+            autocomplete="email"
+        >
+
+
+        <label for="senha">
+            Senha
+        </label>
+
+        <input
+            type="password"
+            id="senha"
+            placeholder="Sua senha"
+            autocomplete="current-password"
+        >
+
+
+        <button
+            id="botaoEntrar"
+            onclick="entrar()"
+        >
+            Entrar
+        </button>
+
+
+        <div
+            id="carregando"
+            class="carregando"
+        >
+            Entrando...
+        </div>
+
+    </div>
+
+
+    <!-- SUPABASE -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <script>
+
+        // =====================================================
+        // CONFIGURAÇÃO
+        // =====================================================
+
+        const SUPABASE_URL = "https://hoeefymvmncbgzrxdcwj.supabase.co";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_Fdv87uRPzxCOBmv-MFHt0w_dBdgMMrq";
+
+
+        const supabaseClient = supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+        // =====================================================
+        // LOGIN
+        // =====================================================
+
+        async function entrar() {
+
+            const email =
+                document.getElementById("email")
+                .value
+                .trim();
+
+            const senha =
+                document.getElementById("senha")
+                .value;
+
+
+            const erro =
+                document.getElementById("erro");
+
+            const botao =
+                document.getElementById("botaoEntrar");
+
+            const carregando =
+                document.getElementById("carregando");
+
+
+            erro.style.display = "none";
+
+
+            if (email === "" || senha === "") {
+
+                erro.innerText =
+                    "Preencha o e-mail e a senha.";
+
+                erro.style.display = "block";
+
+                return;
+            }
+
+
+            botao.disabled = true;
+
+            carregando.style.display = "block";
+
+
+            const { data, error } =
+                await supabaseClient.auth
+                    .signInWithPassword({
+                        email: email,
+                        password: senha
+                    });
+
+
+            botao.disabled = false;
+
+            carregando.style.display = "none";
+
+
+            if (error) {
+
+                console.error(error);
+
+                erro.innerText =
+                    "E-mail ou senha incorretos.";
+
+                erro.style.display = "block";
+
+                return;
+            }
+
+
+            console.log(
+                "Login realizado:",
+                data.user
+            );
+
+
+            // Por enquanto apenas confirma
+            // que o login funcionou.
+
+            alert(
+                "Login realizado com sucesso!"
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
