@@ -1,4 +1,4 @@
-```html02
+```html03
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -285,27 +285,33 @@ let quantidadeEscolhida = 1;
 
 async function carregarPresentes() {
 
+    const lista = document.querySelector(".lista");
+
+    lista.innerHTML = "<p>Consultando Supabase...</p>";
+
     const { data, error } = await supabase
         .from("presentes")
-        .select("*")
-        .eq("ativo", true)
-        .order("id");
+        .select("*");
 
-if (error) {
+    if (error) {
 
-    console.error("Erro ao carregar presentes:", error);
+        lista.innerHTML =
+            "<p style='color:red;'>ERRO: " +
+            error.message +
+            "</p>";
 
-    alert("Não foi possível carregar a lista de presentes.");
+        console.error(error);
 
-    return;
-}
-    console.log("DADOS DO SUPABASE:", data);
-    alert("Quantidade encontrada: " + data.length);
-    
-    presentes = data;
+        return;
+    }
 
-    mostrarPresentes();
+    lista.innerHTML =
+        "<p style='color:green; font-size:20px;'>" +
+        "Supabase encontrou " +
+        data.length +
+        " presente(s).</p>";
 
+    console.log("DADOS RECEBIDOS:", data);
 }
 
 
