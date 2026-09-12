@@ -3,15 +3,20 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Lista de Presentes</title>
 
+
     <style>
+
         * {
             box-sizing: border-box;
         }
+
 
         body {
             margin: 0;
@@ -20,16 +25,19 @@
             color: #333;
         }
 
+
         header {
             background: white;
             text-align: center;
             padding: 40px 20px 30px;
         }
 
+
         header h1 {
             margin: 0 0 12px;
             font-size: 32px;
         }
+
 
         header p {
             margin: 0;
@@ -37,17 +45,23 @@
             line-height: 1.5;
         }
 
+
         .container {
             max-width: 1000px;
             margin: auto;
             padding: 25px 15px 50px;
         }
 
+
         .lista {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(220px, 1fr)
+            );
             gap: 20px;
         }
+
 
         .presente {
             background: white;
@@ -56,20 +70,24 @@
             box-shadow: 0 3px 12px rgba(0,0,0,0.08);
         }
 
+
         .presente img {
             width: 100%;
             height: 200px;
             object-fit: cover;
         }
 
+
         .conteudo {
             padding: 18px;
         }
+
 
         .conteudo h2 {
             margin: 0 0 10px;
             font-size: 20px;
         }
+
 
         .descricao {
             color: #777;
@@ -78,10 +96,12 @@
             margin-bottom: 12px;
         }
 
+
         .quantidade {
             font-weight: bold;
             margin-bottom: 15px;
         }
+
 
         button {
             width: 100%;
@@ -94,16 +114,21 @@
             cursor: pointer;
         }
 
+
         button:hover {
             opacity: 0.85;
         }
+
 
         .esgotado {
             background: #aaa;
             cursor: not-allowed;
         }
 
-        /* Janela de escolha */
+
+        /* ================================
+           MODAL
+        ================================= */
 
         .modal {
             display: none;
@@ -116,6 +141,7 @@
             z-index: 1000;
         }
 
+
         .modal-conteudo {
             background: white;
             width: 100%;
@@ -124,9 +150,11 @@
             padding: 25px;
         }
 
+
         .modal-conteudo h2 {
             margin-top: 0;
         }
+
 
         label {
             display: block;
@@ -134,6 +162,7 @@
             margin-bottom: 6px;
             font-weight: bold;
         }
+
 
         input {
             width: 100%;
@@ -143,6 +172,7 @@
             font-size: 16px;
         }
 
+
         .controle {
             display: flex;
             align-items: center;
@@ -150,27 +180,32 @@
             margin: 10px 0 20px;
         }
 
+
         .controle button {
             width: 45px;
             padding: 10px;
             font-size: 20px;
         }
 
+
         #quantidadeEscolhida {
             font-size: 20px;
             font-weight: bold;
         }
+
 
         .confirmar {
             background: #333;
             margin-top: 10px;
         }
 
+
         .cancelar {
             background: #ddd;
             color: #333;
             margin-top: 8px;
         }
+
 
         .mensagem {
             display: none;
@@ -182,10 +217,25 @@
             text-align: center;
             font-weight: bold;
         }
+
+
+        .erro {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
     </style>
+
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -198,15 +248,20 @@
 </header>
 
 
+
 <div class="container">
 
     <div id="mensagem" class="mensagem"></div>
+
     <div class="lista"></div>
 
 </div>
 
 
-<!-- MODAL -->
+
+<!-- ================================
+     MODAL
+================================= -->
 
 <div id="modal" class="modal">
 
@@ -214,9 +269,11 @@
 
         <h2 id="nomePresente"></h2>
 
+
         <label for="nome">
             Seu nome
         </label>
+
 
         <input
             id="nome"
@@ -229,28 +286,40 @@
             Quantidade
         </label>
 
+
         <div class="controle">
 
-            <button onclick="diminuir()">
+            <button type="button" onclick="diminuir()">
                 −
             </button>
+
 
             <span id="quantidadeEscolhida">
                 1
             </span>
 
-            <button onclick="aumentar()">
+
+            <button type="button" onclick="aumentar()">
                 +
             </button>
 
         </div>
 
 
-        <button class="confirmar" onclick="confirmarPresente()">
+        <button
+            type="button"
+            class="confirmar"
+            onclick="confirmarPresente()"
+        >
             Confirmar presente
         </button>
 
-        <button class="cancelar" onclick="fecharModal()">
+
+        <button
+            type="button"
+            class="cancelar"
+            onclick="fecharModal()"
+        >
             Cancelar
         </button>
 
@@ -259,39 +328,43 @@
 </div>
 
 
+
+<!-- ================================
+     SUPABASE
+================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-<script>
 
-alert("PASSOU DA BIBLIOTECA SUPABASE");
-
-const SUPABASE_URL = "https://hoeefymvmncbgzrxdcwj.supabase.co";
-
-const SUPABASE_ANON_KEY = "sb_publishable_Fdv87uRPzxCOBmv-MFHt0w_dBdgMMrq";
-
-alert("URL E KEY DEFINIDAS");
-
-const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-
-alert("SUPABASE CRIADO!");
-
-</script>
 
 <script>
 
-const SUPABASE_URL = "https://hoeefymvmncbgzrxdcwj.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_Fdv87uRPzxCOBmv-MFHt0w_dBdgMMrq";
 
-const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
+// ========================================
+// CONFIGURAÇÃO DO SUPABASE
+// ========================================
+
+const SUPABASE_URL =
+    "https://hoeefymvmncbgzrxdcwj.supabase.co";
 
 
-// Guarda os presentes carregados do banco
+const SUPABASE_ANON_KEY =
+    "sb_publishable_Fdv87uRPzxCOBmv-MFHt0w_dBdgMMrq";
+
+
+// IMPORTANTE:
+// Existe somente UMA declaração do supabase.
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+// ========================================
+// VARIÁVEIS
+// ========================================
+
 let presentes = [];
 
 let presenteSelecionado = null;
@@ -299,79 +372,164 @@ let presenteSelecionado = null;
 let quantidadeEscolhida = 1;
 
 
+
 // ========================================
 // CARREGAR PRESENTES DO SUPABASE
 // ========================================
-    
+
 async function carregarPresentes() {
 
-    const lista = document.querySelector(".lista");
+    const lista =
+        document.querySelector(".lista");
 
-    lista.innerHTML = "<p>Consultando Supabase...</p>";
 
-    const { data, error } = await supabase
-        .from("presentes")
-        .select("*")
-        .order("id", { ascending: true });
+    lista.innerHTML =
+        "<p>Consultando Supabase...</p>";
 
+
+    console.log(
+        "Iniciando consulta ao Supabase..."
+    );
+
+
+    const { data, error } =
+        await supabaseClient
+            .from("presentes")
+            .select("*")
+            .order("id", {
+                ascending: true
+            });
+
+
+    console.log(
+        "DATA RECEBIDA:",
+        data
+    );
+
+
+    console.log(
+        "ERRO:",
+        error
+    );
+
+
+    // ====================================
+    // ERRO
+    // ====================================
 
     if (error) {
 
-        lista.innerHTML =
-            "<p style='color:red;'>ERRO: " +
-            error.message +
-            "</p>";
+        console.error(
+            "ERRO SUPABASE:",
+            error
+        );
 
-        console.error("ERRO SUPABASE:", error);
+
+        lista.innerHTML = `
+            <div class="erro">
+                Erro ao carregar os presentes.<br><br>
+                ${error.message}
+            </div>
+        `;
+
 
         return;
     }
 
 
-    console.log("DADOS RECEBIDOS:", data);
+    // ====================================
+    // GUARDA OS PRESENTES
+    // ====================================
 
-
-    // IMPORTANTE:
-    // Guarda os presentes recebidos do Supabase
     presentes = data || [];
 
 
-    // Mostra os presentes na tela
+    console.log(
+        "Presentes carregados:",
+        presentes
+    );
+
+
+    // ====================================
+    // MOSTRA NA TELA
+    // ====================================
+
     mostrarPresentes();
 
 }
 
 
+
 // ========================================
-// MOSTRAR PRESENTES NA TELA
+// MOSTRAR PRESENTES
 // ========================================
 
 function mostrarPresentes() {
 
-    const lista = document.querySelector(".lista");
+    const lista =
+        document.querySelector(".lista");
+
 
     lista.innerHTML = "";
 
 
-    presentes.forEach((presente, indice) => {
+    // Nenhum presente
 
-        const card = document.createElement("div");
+    if (presentes.length === 0) {
 
-        card.className = "presente";
+        lista.innerHTML = `
+            <p>
+                Nenhum presente cadastrado.
+            </p>
+        `;
 
 
-        const imagem = presente.foto_url
-            ? presente.foto_url
-            : "https://via.placeholder.com/800x500?text=Presente";
+        return;
+    }
 
+
+
+    // ====================================
+    // CRIA OS CARDS
+    // ====================================
+
+    presentes.forEach(
+        (presente, indice) => {
+
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "presente";
+
+
+        // Imagem
+
+        const imagem =
+            presente.foto_url
+                ? presente.foto_url
+                : "https://via.placeholder.com/800x500?text=Presente";
+
+
+
+        // =================================
+        // BOTÃO
+        // =================================
 
         let botao;
 
 
-        if (presente.quantidade <= 0) {
+        if (
+            Number(presente.quantidade) <= 0
+        ) {
 
             botao = `
-                <button class="esgotado" disabled>
+                <button
+                    class="esgotado"
+                    disabled
+                >
                     Esgotado
                 </button>
             `;
@@ -379,7 +537,10 @@ function mostrarPresentes() {
         } else {
 
             botao = `
-                <button onclick="abrirModal(${indice})">
+                <button
+                    type="button"
+                    onclick="abrirModal(${indice})"
+                >
                     Escolher presente
                 </button>
             `;
@@ -387,31 +548,50 @@ function mostrarPresentes() {
         }
 
 
+
+        // =================================
+        // CARD
+        // =================================
+
         card.innerHTML = `
 
             <img
                 src="${imagem}"
-                alt="${presente.nome}"
+                alt="${presente.nome || "Presente"}"
             >
+
 
             <div class="conteudo">
 
-                <h2>${presente.nome}</h2>
+                <h2>
+                    ${presente.nome || ""}
+                </h2>
+
 
                 <div class="descricao">
+
                     ${presente.descricao || ""}
+
                 </div>
 
+
                 <div class="quantidade">
+
                     Disponível:
+
                     <span id="qtd-${indice}">
+
                         ${presente.quantidade}
+
                     </span>
+
                 </div>
+
 
                 ${botao}
 
             </div>
+
         `;
 
 
@@ -422,36 +602,54 @@ function mostrarPresentes() {
 }
 
 
+
 // ========================================
 // ABRIR MODAL
 // ========================================
 
 function abrirModal(indice) {
 
-    if (presentes[indice].quantidade <= 0) {
+    if (
+        !presentes[indice] ||
+        Number(presentes[indice].quantidade) <= 0
+    ) {
+
         return;
     }
 
 
-    presenteSelecionado = indice;
+    presenteSelecionado =
+        indice;
 
-    quantidadeEscolhida = 1;
+
+    quantidadeEscolhida =
+        1;
 
 
-    document.getElementById("nomePresente").innerText =
+    document.getElementById(
+        "nomePresente"
+    ).innerText =
         presentes[indice].nome;
 
 
-    document.getElementById("quantidadeEscolhida").innerText =
+    document.getElementById(
+        "quantidadeEscolhida"
+    ).innerText =
         quantidadeEscolhida;
 
 
-    document.getElementById("nome").value = "";
+    document.getElementById(
+        "nome"
+    ).value = "";
 
 
-    document.getElementById("modal").style.display = "flex";
+    document.getElementById(
+        "modal"
+    ).style.display =
+        "flex";
 
 }
+
 
 
 // ========================================
@@ -460,9 +658,18 @@ function abrirModal(indice) {
 
 function fecharModal() {
 
-    document.getElementById("modal").style.display = "none";
+    document.getElementById(
+        "modal"
+    ).style.display =
+        "none";
+
+
+
+    presenteSelecionado =
+        null;
 
 }
+
 
 
 // ========================================
@@ -471,27 +678,39 @@ function fecharModal() {
 
 function aumentar() {
 
-    if (presenteSelecionado === null) {
+    if (
+        presenteSelecionado === null
+    ) {
+
         return;
     }
 
 
     const disponivel =
-        presentes[presenteSelecionado].quantidade;
+        Number(
+            presentes[
+                presenteSelecionado
+            ].quantidade
+        );
 
 
-    if (quantidadeEscolhida < disponivel) {
+    if (
+        quantidadeEscolhida <
+        disponivel
+    ) {
 
         quantidadeEscolhida++;
 
 
         document.getElementById(
             "quantidadeEscolhida"
-        ).innerText = quantidadeEscolhida;
+        ).innerText =
+            quantidadeEscolhida;
 
     }
 
 }
+
 
 
 // ========================================
@@ -500,18 +719,22 @@ function aumentar() {
 
 function diminuir() {
 
-    if (quantidadeEscolhida > 1) {
+    if (
+        quantidadeEscolhida > 1
+    ) {
 
         quantidadeEscolhida--;
 
 
         document.getElementById(
             "quantidadeEscolhida"
-        ).innerText = quantidadeEscolhida;
+        ).innerText =
+            quantidadeEscolhida;
 
     }
 
 }
+
 
 
 // ========================================
@@ -521,140 +744,45 @@ function diminuir() {
 async function confirmarPresente() {
 
     const nome =
-        document.getElementById("nome").value.trim();
+        document
+            .getElementById("nome")
+            .value
+            .trim();
 
+
+    // ====================================
+    // VERIFICA NOME
+    // ====================================
 
     if (nome === "") {
 
-        alert("Digite seu nome.");
+        alert(
+            "Digite seu nome."
+        );
 
         return;
-
     }
 
 
-    if (presenteSelecionado === null) {
+    // ====================================
+    // VERIFICA PRESENTE
+    // ====================================
+
+    if (
+        presenteSelecionado === null
+    ) {
+
         return;
     }
 
 
     const presente =
-        presentes[presenteSelecionado];
+        presentes[
+            presenteSelecionado
+        ];
 
 
-    // Desabilita o botão enquanto salva
-    const botoes =
-        document.querySelectorAll(".confirmar");
-
-    botoes.forEach(botao => {
-        botao.disabled = true;
-        botao.innerText = "Salvando...";
-    });
-
-
-    // Chama a função segura do Supabase
-    const { data, error } = await supabase.rpc(
-        "escolher_presente",
-        {
-            p_presente_id: presente.id,
-            p_nome: nome,
-            p_quantidade: quantidadeEscolhida
-        }
-    );
-
-
-    if (error) {
-
-        console.error(error);
-
-        alert(
-            "Não foi possível registrar a escolha. Tente novamente."
-        );
-
-        botoes.forEach(botao => {
-            botao.disabled = false;
-            botao.innerText = "Confirmar presente";
-        });
-
-        return;
-    }
-
-
-    // Verifica resposta do banco
-    if (!data.sucesso) {
-
-        alert(data.mensagem);
-
-        botoes.forEach(botao => {
-            botao.disabled = false;
-            botao.innerText = "Confirmar presente";
-        });
-
-        // Atualiza a lista caso a quantidade tenha mudado
-        await carregarPresentes();
-
-        fecharModal();
-
-        return;
-    }
-
-
-    // Mostra mensagem de sucesso
-    const mensagem =
-        document.getElementById("mensagem");
-
-
-    mensagem.innerText =
-        "Obrigado, " + nome +
-        "! Você escolheu " +
-        quantidadeEscolhida +
-        " unidade(s) de " +
-        presente.nome +
-        ".";
-
-
-    mensagem.style.display = "block";
-
-
-    fecharModal();
-
-
-    // Recarrega a lista diretamente do banco
-    await carregarPresentes();
-
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-}
-
-
-// ========================================
-// INICIAR SITE
-// ========================================
-
-//carregarPresentes();
-// ========================================
-// INICIAR SITE
-// ========================================
-
-console.log("JAVASCRIPT FOI EXECUTADO!");
-
-alert("O JavaScript está funcionando!");
-    
-</script>
+    // ====================================
+    // DESABILITA BOTÃO
+    //
 ```
-<script>
-    alert("TESTE FUNCIONOU!");
-    console.log("TESTE FUNCIONOU!");
-</script>
-
-</body>
-
-</html>
-
-</body>
-
-</html>
