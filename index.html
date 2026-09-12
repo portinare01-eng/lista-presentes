@@ -530,9 +530,11 @@ async function confirmarPresente() {
 
     if (error) {
 
-    alert("ERRO SUPABASE: " + error.message);
+        console.error(error);
 
-    console.error("Erro ao carregar presentes:", error);
+        alert(
+            "Não foi possível registrar a escolha. Tente novamente."
+        );
 
         botoes.forEach(botao => {
             botao.disabled = false;
