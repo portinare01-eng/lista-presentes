@@ -1,4 +1,4 @@
-```html01
+```html02
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -291,14 +291,14 @@ async function carregarPresentes() {
         .eq("ativo", true)
         .order("id");
 
-    if (error) {
+if (error) {
 
-        console.error("Erro ao carregar presentes:", error);
+    alert("ERRO SUPABASE: " + error.message);
 
-        alert("Não foi possível carregar a lista de presentes.");
+    console.error("Erro ao carregar presentes:", error);
 
-        return;
-    }
+    return;
+}
 
     presentes = data;
 
