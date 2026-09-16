@@ -744,10 +744,8 @@
                 );
 
 
-            const imagem =
-                document.getElementById(
-                    "imagemPresente"
-                ).value.trim();
+            const arquivoImagem =
+                document.getElementById("imagemPresente").files[0];
 
 
             if (!nome) {
@@ -772,6 +770,47 @@
                 return;
             }
 
+            let imagemUrl = null;
+            
+            if (arquivoImagem) {
+            
+                const extensao =
+                    arquivoImagem.name.split(".").pop();
+            
+                const nomeArquivo =
+                    `${Date.now()}-${Math.random()
+                        .toString(36)
+                        .substring(2)}.${extensao}`;
+            
+                const caminho =
+                    `presentes/${nomeArquivo}`;
+            
+                const { error: uploadError } =
+                    await supabaseClient
+                        .storage
+                        .from("presentes")
+                        .upload(caminho, arquivoImagem);
+            
+                if (uploadError) {
+            
+                    console.error(uploadError);
+            
+                    alert(
+                        "Não foi possível enviar a imagem."
+                    );
+            
+                    return;
+                }
+            
+                const { data: urlData } =
+                    supabaseClient
+                        .storage
+                        .from("presentes")
+                        .getPublicUrl(caminho);
+            
+                imagemUrl =
+                    urlData.publicUrl;
+                }
 
             let resultado;
 
@@ -785,8 +824,8 @@
                             nome: nome,
                             descricao: descricao,
                             quantidade: quantidade,
-                            imagem_url:
-                                imagem || null
+                             imagem_url:
+                                imagemUrl
                         });
 
             } else {
@@ -799,7 +838,7 @@
                             descricao: descricao,
                             quantidade: quantidade,
                             imagem_url:
-                                imagem || null
+                                imagemUrl
                         })
                         .eq(
                             "id",
